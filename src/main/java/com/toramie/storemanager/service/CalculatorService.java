@@ -78,9 +78,7 @@ public class CalculatorService {
     //to calculate the value to the desired rounded up value
     private BigDecimal roundingCalculator (BigDecimal total, BigDecimal multiple) {
         BigDecimal quotient = total.divide(multiple,0, RoundingMode.CEILING);
-        BigDecimal result = quotient.multiply(multiple);
-
-        return result;
+        return quotient.multiply(multiple);
     }
 
 }
