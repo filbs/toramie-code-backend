@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping ("api/public/calculator")
+@RequestMapping ("/api/public/calculator")
 public class CalculatorController {
     @Autowired
     private CalculatorService service;

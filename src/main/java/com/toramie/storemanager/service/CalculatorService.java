@@ -3,7 +3,6 @@ package com.toramie.storemanager.service;
 import com.toramie.storemanager.dto.CalculatorRequest;
 import com.toramie.storemanager.model.CalculatorSettings;
 import com.toramie.storemanager.repository.CalculatorSettingsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -37,6 +36,16 @@ public class CalculatorService {
         BigDecimal total = price.add(profit).add(shipping).add(settings.getPackingFee());
 
         return roundingCalculator(total, settings.getRoundingValue());
+    }
+
+    public CalculatorSettings getSettings () {
+        return repository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("Settings not found!"));
+    }
+
+    public CalculatorSettings updateSettings(CalculatorSettings newSettings) {
+        newSettings.setId(1L);
+        return repository.save(newSettings);
     }
 
     private BigDecimal getModifierByCategory (CalculatorRequest request, CalculatorSettings settings) {

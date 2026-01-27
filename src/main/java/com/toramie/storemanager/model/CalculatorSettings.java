@@ -48,6 +48,10 @@ public class CalculatorSettings {
     @Column (name = "RoundingValue", nullable = false)
     private BigDecimal roundingValue;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

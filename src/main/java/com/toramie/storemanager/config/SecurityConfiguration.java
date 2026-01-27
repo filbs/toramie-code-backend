@@ -2,6 +2,7 @@ package com.toramie.storemanager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,8 +16,10 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable()) //API testing
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/public/**").permitAll() //public authorization
+                        .requestMatchers("/api/admin/**").authenticated()//admin authorization
                         .anyRequest().authenticated()
-                );
+                )
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 }
