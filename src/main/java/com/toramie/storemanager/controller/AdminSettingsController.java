@@ -10,8 +10,13 @@ import org.springframework.web.bind.annotation.*;
 public class AdminSettingsController {
     private final CalculatorService calculatorService;
 
-    public AdminSettingsController(CalculatorService calculatorService) {
+    public AdminSettingsController (CalculatorService calculatorService) {
         this.calculatorService = calculatorService;
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<Void> check () {
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
