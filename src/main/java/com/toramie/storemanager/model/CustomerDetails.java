@@ -1,12 +1,13 @@
 package com.toramie.storemanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
 public class CustomerDetails {
 
     @Id
-    private String id;
+    private String orderId;
 
     private String customerName;
     private String customerAddress;
@@ -14,15 +15,16 @@ public class CustomerDetails {
 
     @OneToOne
     @MapsId
+    @JsonIgnore
     @JoinColumn(name = "order_id")
     private OrderRecord orderRecord;
 
-    public String getId() {
-        return id;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getCustomerName() {

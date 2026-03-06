@@ -1,5 +1,6 @@
 package com.toramie.storemanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 public class OrderDetails {
 
     @Id
-    private String id;
+    private String orderId;
 
     private String itemType;
     private String itemName;
@@ -18,15 +19,16 @@ public class OrderDetails {
 
     @OneToOne
     @MapsId
+    @JsonIgnore
     @JoinColumn(name = "order_id")
     private OrderRecord orderRecord;
 
-    public String getId() {
-        return id;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getItemType() {

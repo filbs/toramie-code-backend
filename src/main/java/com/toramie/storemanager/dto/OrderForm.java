@@ -1,20 +1,35 @@
 package com.toramie.storemanager.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
 public class OrderForm {
-    @NotNull
+    @NotBlank
     private String customerName;
+    @NotBlank
     private String customerAddress;
     private String phoneNumber;
+    @NotBlank
     private String itemType;
+    @NotBlank
     private String itemName;
+    @NotNull
     private Integer quantity;
+    @NotNull
     private BigDecimal priceInYuan;
-    private String orderStatus; // 'FP', 'DP'
+    private BigDecimal yuanRate;
+    private BigDecimal extras;
+    private BigDecimal domesticPostage;
+    private BigDecimal downPayment;
+    private BigDecimal repayment;
+    @NotBlank
+    private String paymentStatus; // 'FP', 'DP'
+    @NotBlank
     private String platform; // 'WD', 'XHS'
+    private String shippingStatus;
+    private String information;
 
     public String getCustomerName() {
         return customerName;
@@ -72,12 +87,52 @@ public class OrderForm {
         this.priceInYuan = priceInYuan;
     }
 
-    public String getOrderStatus() {
-        return orderStatus;
+    public BigDecimal getYuanRate() {
+        return yuanRate;
     }
 
-    public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setYuanRate(BigDecimal yuanRate) {
+        this.yuanRate = yuanRate;
+    }
+
+    public BigDecimal getExtras() {
+        return extras;
+    }
+
+    public void setExtras(BigDecimal extras) {
+        this.extras = extras;
+    }
+
+    public BigDecimal getDomesticPostage() {
+        return domesticPostage;
+    }
+
+    public void setDomesticPostage(BigDecimal domesticPostage) {
+        this.domesticPostage = domesticPostage;
+    }
+
+    public BigDecimal getDownPayment() {
+        return downPayment;
+    }
+
+    public void setDownPayment(BigDecimal downPayment) {
+        this.downPayment = downPayment;
+    }
+
+    public BigDecimal getRepayment() {
+        return repayment;
+    }
+
+    public void setRepayment(BigDecimal repayment) {
+        this.repayment = repayment;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     public String getPlatform() {
@@ -86,6 +141,22 @@ public class OrderForm {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public String getShippingStatus() {
+        return shippingStatus;
+    }
+
+    public void setShippingStatus(String shippingStatus) {
+        this.shippingStatus = shippingStatus;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
     }
 }
 

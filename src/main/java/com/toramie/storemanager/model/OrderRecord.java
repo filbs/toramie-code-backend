@@ -17,6 +17,17 @@ public class OrderRecord {
     @OneToOne(mappedBy = "orderRecord", cascade = CascadeType.ALL)
     private OrderDetails orderDetails;
 
+    @OneToOne(mappedBy = "orderRecord", cascade = CascadeType.ALL)
+    private OrderFinancials orderFinancials;
+
+
+
+    public OrderRecord() {}
+
+    public OrderRecord(String orderId) {
+        this.orderId = orderId;
+    }
+
     public String getOrderId() {
         return orderId;
     }
@@ -39,5 +50,13 @@ public class OrderRecord {
 
     public void setOrderDetails(OrderDetails orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public OrderFinancials getOrderFinancials() {
+        return orderFinancials;
+    }
+
+    public void setOrderFinancials(OrderFinancials orderFinancials) {
+        this.orderFinancials = orderFinancials;
     }
 }
