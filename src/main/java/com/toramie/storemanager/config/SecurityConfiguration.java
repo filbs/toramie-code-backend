@@ -37,7 +37,7 @@ public class SecurityConfiguration {
         //React App connection auth
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
-                "https://toramie-store.onrender.com"
+                "https://toramie-store-frontend.vercel.app/"
         ));
 
         //React App action
