@@ -48,9 +48,26 @@ public class CalculatorService {
         });
     }
 
-    public CalculatorSettings updateSettings(CalculatorSettings newSettings) {
-        newSettings.setId(1L);
-        return repository.save(newSettings);
+    public CalculatorSettings updateSettings(CalculatorSettings incoming) {
+        CalculatorSettings existing = repository.findById(1L)
+                .orElse(new CalculatorSettings());
+
+        existing.setId(1L);
+
+        existing.setYuanRate(incoming.getYuanRate());
+        existing.setRateDollProfit(incoming.getRateDollProfit());
+        existing.setRateOthersProfit(incoming.getRateOthersProfit());
+        existing.setDoll10CMProfit(incoming.getDoll10CMProfit());
+        existing.setDoll20CMProfit(incoming.getDoll20CMProfit());
+        existing.setDoll40CMProfit(incoming.getDoll40CMProfit());
+        existing.setShippingFee10CM(incoming.getShippingFee10CM());
+        existing.setShippingFee20CM(incoming.getShippingFee20CM());
+        existing.setShippingFee40CM(incoming.getShippingFee40CM());
+        existing.setShippingFeeWeightBased(incoming.getShippingFeeWeightBased());
+        existing.setPackingFee(incoming.getPackingFee());
+        existing.setRoundingValue(incoming.getRoundingValue());
+
+        return repository.save(existing);
     }
 
     private BigDecimal getModifierByCategory (CalculatorRequest request, CalculatorSettings settings) {
