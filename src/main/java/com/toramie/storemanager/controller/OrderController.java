@@ -35,4 +35,20 @@ public class OrderController {
     public ResponseEntity<List<OrderRecord>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderRecord> getOrderById(@PathVariable String id) {
+        return ResponseEntity.ok(orderService.getOrderById(id));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<OrderRecord>> searchOrders(@RequestParam String query) {
+        return ResponseEntity.ok(orderService.searchOrders(query));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteOrder(@PathVariable String id) {
+        orderService.deleteOrderById(id);
+        return ResponseEntity.ok("Order " + id + " deleted successfully.");
+    }
 }

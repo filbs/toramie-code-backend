@@ -20,6 +20,7 @@ public class OrderFinancials {
     private BigDecimal extras;
     private BigDecimal modal; //(total rupiah per item + extras) * quantity
     private BigDecimal itemTypeProfit;
+    private BigDecimal weightInput;
     private BigDecimal price; //total payment: ((rate + 400) * (yuan price + postage) + shipping + profit
     private BigDecimal finalPrice; //rounding up price
     private BigDecimal downPayment;
@@ -28,11 +29,10 @@ public class OrderFinancials {
     private BigDecimal profit; //repayment - (quantity * (shipping + extras))
     private BigDecimal totalProfit; // dp profit + profit
     private BigDecimal tProfitWithShipping; // total profit + (shipping * quantity)
-
     private String information;
+
     private String paymentStatus; // DP or FP
     private String shippingStatus; // arrived or shipping
-
     @OneToOne
     @MapsId
     @JsonIgnore
@@ -117,6 +117,14 @@ public class OrderFinancials {
 
     public void setItemTypeProfit(BigDecimal itemTypeProfit) {
         this.itemTypeProfit = itemTypeProfit;
+    }
+
+    public BigDecimal getWeightInput() {
+        return weightInput;
+    }
+
+    public void setWeightInput(BigDecimal weightInput) {
+        this.weightInput = weightInput;
     }
 
     public BigDecimal getPrice() {

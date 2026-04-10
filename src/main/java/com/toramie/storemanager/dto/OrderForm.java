@@ -20,6 +20,9 @@ public class OrderForm {
     @NotNull
     private BigDecimal priceInYuan;
     private BigDecimal yuanRate;
+
+    private BigDecimal weightInput;
+
     private BigDecimal extras;
     private BigDecimal domesticPostage;
     private BigDecimal downPayment;
@@ -30,7 +33,6 @@ public class OrderForm {
     private String platform; // 'WD', 'XHS'
     private String shippingStatus;
     private String information;
-
     public String getCustomerName() {
         return customerName;
     }
@@ -85,6 +87,14 @@ public class OrderForm {
 
     public void setPriceInYuan(BigDecimal priceInYuan) {
         this.priceInYuan = priceInYuan;
+    }
+
+    public BigDecimal getWeightInput() {
+        return weightInput;
+    }
+
+    public void setWeightInput(BigDecimal weightInput) {
+        this.weightInput = weightInput;
     }
 
     public BigDecimal getYuanRate() {

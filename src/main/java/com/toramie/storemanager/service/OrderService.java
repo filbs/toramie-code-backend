@@ -5,6 +5,7 @@ import com.toramie.storemanager.model.*;
 import com.toramie.storemanager.repository.CalculatorSettingsRepository;
 import com.toramie.storemanager.repository.OrderRecordRepository;
 import jakarta.transaction.Transactional;
+import org.hibernate.query.Order;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,9 +31,14 @@ public class OrderService {
         String orderId = generateCustomId(form.getPlatform());
         OrderRecord master = new OrderRecord(orderId);
 
-        CustomerDetails customer = mapCustomer(form, master);
-        OrderDetails details = mapOrderDetails(form, master);
-        OrderFinancials financials = mapFinancials(form, master, settings);
+        CustomerDetails customer = new CustomerDetails();
+        mapCustomer(form, customer, master);
+
+        OrderDetails details = new OrderDetails();
+        mapOrderDetails(form, details,master);
+
+        OrderFinancials financials = new OrderFinancials();
+        mapFinancials(form, financials,master, settings);
 
         applyCalculation(financials, settings, details.getItemType());
 
@@ -50,9 +56,15 @@ public class OrderService {
 
         OrderRecord master = orderRepo.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 
-        CustomerDetails customer = mapCustomer(form, master);
-        OrderDetails details = mapOrderDetails(form, master);
-        OrderFinancials financials = mapFinancials(form, master, settings);
+
+        CustomerDetails customer = master.getCustomerDetails();
+        mapCustomer(form, customer, master);
+
+        OrderDetails details = master.getOrderDetails();
+        mapOrderDetails(form, details, master);
+
+        OrderFinancials financials = master.getOrderFinancials();
+        mapFinancials(form, financials,master, settings);
 
         applyCalculation(financials, settings, details.getItemType());
 
@@ -64,22 +76,39 @@ public class OrderService {
     }
 
     private String generateCustomId(String platform) {
-        return platform + String.format("%03d", orderRepo.count() + 1);
+        String lastId = orderRepo.findLastOrderIdNumeric();
+        int nextNum = 1;
+
+        if (lastId != null) {
+            // Extract numbers from "WD006" -> 6
+            String numericPart = lastId.replaceAll("[^0-9]", "");
+            nextNum = Integer.parseInt(numericPart) + 1;
+        }
+
+        // FAILSAFE LOOP: If WD007 exists, try WD008, etc.
+        String finalId;
+        do {
+            finalId = platform + String.format("%03d", nextNum);
+            nextNum++;
+        } while (orderRepo.existsById(finalId));
+
+        return finalId;
     }
 
-    private CustomerDetails mapCustomer(OrderForm form, OrderRecord master) {
-        CustomerDetails c = new CustomerDetails();
+    public OrderRecord getOrderById (String id) {
+        return orderRepo.findById(id).orElseThrow(() -> new RuntimeException("Order not found:" + id));
+    }
+
+    private void mapCustomer(OrderForm form, CustomerDetails c, OrderRecord master) {
         c.setCustomerName(form.getCustomerName());
         c.setCustomerAddress(form.getCustomerAddress());
         c.setPhoneNumber(form.getPhoneNumber());
 
         //child to parent (master)
         c.setOrderRecord(master);
-        return c;
     }
 
-    private OrderDetails mapOrderDetails(OrderForm form, OrderRecord master) {
-        OrderDetails d = new OrderDetails();
+    private void mapOrderDetails(OrderForm form, OrderDetails d, OrderRecord master) {
         d.setItemType(form.getItemType());
         d.setItemName(form.getItemName());
         d.setQuantity(form.getQuantity());
@@ -87,16 +116,14 @@ public class OrderService {
         d.setOrderStatus(form.getPaymentStatus());
 
         d.setOrderRecord(master);
-        return d;
     }
 
-    private OrderFinancials mapFinancials(OrderForm form, OrderRecord master, CalculatorSettings settings) {
-        OrderFinancials f = new OrderFinancials();
-
+    private void mapFinancials(OrderForm form, OrderFinancials f,OrderRecord master, CalculatorSettings settings) {
         f.setOrderRecord(master);
         f.setPriceInYuan(form.getPriceInYuan());
         f.setDomPostage(form.getDomesticPostage() != null ? form.getDomesticPostage() : BigDecimal.ZERO);
         f.setQuantity(form.getQuantity());
+        f.setWeightInput(form.getWeightInput() != null ? form.getWeightInput() : BigDecimal.ZERO);
         f.setExtras(form.getExtras() != null ? form.getExtras() : BigDecimal.ZERO);
         f.setDownPayment(form.getDownPayment() != null ? form.getDownPayment() : BigDecimal.ZERO);
         f.setRepayment(form.getRepayment() != null ? form.getRepayment() : BigDecimal.ZERO);
@@ -107,14 +134,19 @@ public class OrderService {
         f.setPaymentStatus(form.getPaymentStatus());
         f.setShippingStatus(form.getShippingStatus());
         f.setInformation(form.getInformation());
-
-        return f;
     }
 
     public void applyCalculation(OrderFinancials f, CalculatorSettings s, String itemType) {
-        BigDecimal shipFeeConst = getShippingFeeByType(s, itemType);
+        BigDecimal shipFeeConst;
         BigDecimal sizeProfitConst = getSizeProfitByType(s,itemType);
         BigDecimal qty = new BigDecimal(f.getQuantity());
+
+        if (itemType.equalsIgnoreCase("WEIGHT_BASED")) {
+            BigDecimal weight = f.getWeightInput() != null ? f.getWeightInput() : BigDecimal.ZERO;
+            shipFeeConst = s.getShippingFeeWeightBased().multiply(weight);
+        } else {
+            shipFeeConst = getShippingFeeByType(s, itemType);
+        }
 
         //total IDR calculation
         BigDecimal idrValue = f.getPriceInYuan().add(f.getDomPostage());
@@ -178,5 +210,19 @@ public class OrderService {
 
     public List<OrderRecord> getAllOrders() {
         return orderRepo.findAll();
+    }
+
+    public void deleteOrderById(String id) {
+        if (!orderRepo.existsById(id)) {
+            throw new RuntimeException("Order not found. Cannot delete order: " + id);
+        }
+        orderRepo.deleteById(id);
+    }
+
+    public List<OrderRecord> searchOrders(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return orderRepo.findAll();
+        }
+        return orderRepo.searchOrders(query);
     }
 }
