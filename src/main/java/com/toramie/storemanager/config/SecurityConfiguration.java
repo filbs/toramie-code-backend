@@ -19,8 +19,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) //API testing
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll() //public authorization
                         .requestMatchers("/api/admin/**").authenticated()//admin authorization
                         .anyRequest().authenticated()
@@ -37,7 +39,7 @@ public class SecurityConfiguration {
         //React App connection auth
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
-                "https://toramie-store-frontend.vercel.app/"
+                "https://toramie-store-frontend.vercel.app"
         ));
 
         //React App action
