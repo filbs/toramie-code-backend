@@ -35,7 +35,10 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 
         //React App connection auth
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173",
+                "https://toramie-store.onrender.com"
+        ));
 
         //React App action
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
