@@ -23,8 +23,8 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable()) //API testing
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/public/**").permitAll() //public authorization
-                        .requestMatchers("/api/admin/**").authenticated()//admin authorization
+                        .requestMatchers("/api/public/**").permitAll() // Ensure this is exactly your public path
+                        .requestMatchers("/api/admin/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))

@@ -39,8 +39,13 @@ public class CalculatorService {
     }
 
     public CalculatorSettings getSettings () {
-        return repository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("Settings not found!"));
+        return repository.findById(1L).orElseGet(() -> {
+            CalculatorSettings defaults = new CalculatorSettings();
+            defaults.setId(1L);
+            defaults.setYuanRate(new BigDecimal("2000")); // Default starting rate
+            // Set other mandatory fields to zero or a default string
+            return defaults;
+        });
     }
 
     public CalculatorSettings updateSettings(CalculatorSettings newSettings) {
