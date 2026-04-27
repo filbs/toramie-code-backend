@@ -5,48 +5,47 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table (name = "MstCalcSettings")
+@Table(name = "mst_calc_settings")
 public class CalculatorSettings {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "ID")
-    private Long id;
+    private Long id; // Remove @GeneratedValue because we force ID 1
 
-    @Column (name = "YuanRate", nullable = false)
+    @Column(nullable = false)
     private BigDecimal yuanRate;
 
-    @Column (name = "RateDollProfit", nullable = false)
+    @Column(nullable = false)
     private BigDecimal rateDollProfit;
 
-    @Column (name = "RateOthersProfit", nullable = false)
+    @Column(nullable = false)
     private BigDecimal rateOthersProfit;
 
-    @Column (name = "Doll10CMProfit", nullable = false)
+    @Column(nullable = false)
     private BigDecimal doll10CMProfit;
 
-    @Column (name = "Doll20CMProfit", nullable = false)
+    @Column(nullable = false)
     private BigDecimal doll20CMProfit;
 
-    @Column (name = "Doll40CMProfit", nullable = false)
+    @Column(nullable = false)
     private BigDecimal doll40CMProfit;
 
-    @Column (name = "ShippingFee10CM", nullable = false)
+    @Column(nullable = false)
     private BigDecimal shippingFee10CM;
 
-    @Column (name = "ShippingFee20CM", nullable = false)
+    @Column(nullable = false)
     private BigDecimal shippingFee20CM;
 
-    @Column (name = "ShippingFee40CM", nullable = false)
+    @Column(nullable = false)
     private BigDecimal shippingFee40CM;
 
-    @Column (name = "ShippingFeeWeightBased", nullable = false)
+    @Column(nullable = false)
     private BigDecimal shippingFeeWeightBased;
 
-    @Column (name = "PackingFee", nullable = false)
+    @Column(nullable = false)
     private BigDecimal packingFee;
 
-    @Column (name = "RoundingValue", nullable = false)
+    @Column(nullable = false)
     private BigDecimal roundingValue;
+
 
     public void setId(Long id) {
         this.id = id;
