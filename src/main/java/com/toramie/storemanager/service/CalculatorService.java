@@ -49,25 +49,29 @@ public class CalculatorService {
     }
 
     public CalculatorSettings updateSettings(CalculatorSettings incoming) {
-        CalculatorSettings existing = repository.findById(1L)
-                .orElse(new CalculatorSettings());
+        if (!repository.existsById(1L)) {
+            incoming.setId(1L);
+            return repository.save(incoming);
+        }
 
-        existing.setId(1L);
+        // 2. If it exists, use the Native Query to "force" the update and bypass the locking error
+        repository.updateSettingsDirectly(
+                incoming.getYuanRate(),
+                incoming.getRateDollProfit(),
+                incoming.getRateOthersProfit(),
+                incoming.getDoll10CMProfit(),
+                incoming.getDoll20CMProfit(),
+                incoming.getDoll40CMProfit(),
+                incoming.getShippingFee10CM(),
+                incoming.getShippingFee20CM(),
+                incoming.getShippingFee40CM(),
+                incoming.getShippingFeeWeightBased(),
+                incoming.getPackingFee(),
+                incoming.getRoundingValue()
+        );
 
-        existing.setYuanRate(incoming.getYuanRate());
-        existing.setRateDollProfit(incoming.getRateDollProfit());
-        existing.setRateOthersProfit(incoming.getRateOthersProfit());
-        existing.setDoll10CMProfit(incoming.getDoll10CMProfit());
-        existing.setDoll20CMProfit(incoming.getDoll20CMProfit());
-        existing.setDoll40CMProfit(incoming.getDoll40CMProfit());
-        existing.setShippingFee10CM(incoming.getShippingFee10CM());
-        existing.setShippingFee20CM(incoming.getShippingFee20CM());
-        existing.setShippingFee40CM(incoming.getShippingFee40CM());
-        existing.setShippingFeeWeightBased(incoming.getShippingFeeWeightBased());
-        existing.setPackingFee(incoming.getPackingFee());
-        existing.setRoundingValue(incoming.getRoundingValue());
-
-        return repository.save(existing);
+        // 3. Return the updated data
+        return repository.findById(1L).get();
     }
 
     private BigDecimal getModifierByCategory (CalculatorRequest request, CalculatorSettings settings) {
